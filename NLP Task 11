@@ -1,0 +1,94 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": []
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "code",
+      "execution_count": 5,
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "-itc4mXMNBN-",
+        "outputId": "efd88085-382d-45d2-be9e-b160aa80f883"
+      },
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Accuracy: 0.3333333333333333\n",
+            "Prediction: Positive\n"
+          ]
+        }
+      ],
+      "source": [
+        "from sklearn.feature_extraction.text import TfidfVectorizer\n",
+        "from sklearn.svm import SVC\n",
+        "from sklearn.model_selection import train_test_split\n",
+        "from sklearn.metrics import accuracy_score\n",
+        "\n",
+        "texts = [\n",
+        "    \"I love this movie\",\n",
+        "    \"This movie is amazing\",\n",
+        "    \"The film was excellent\",\n",
+        "    \"This movie is wonderful\",\n",
+        "    \"I really enjoyed this film\",\n",
+        "    \"The movie was fantastic\",\n",
+        "    \"I hate this movie\",\n",
+        "    \"This movie is boring\",\n",
+        "    \"The film was terrible\",\n",
+        "    \"This movie is bad\",\n",
+        "    \"I disliked this film\",\n",
+        "    \"The movie was disappointing\"\n",
+        "]\n",
+        "\n",
+        "labels = [\n",
+        "    1, 1, 1, 1, 1, 1,\n",
+        "    0, 0, 0, 0, 0, 0\n",
+        "]\n",
+        "\n",
+        "vectorizer = TfidfVectorizer()\n",
+        "X = vectorizer.fit_transform(texts)\n",
+        "\n",
+        "X_train, X_test, y_train, y_test = train_test_split(\n",
+        "    X, labels,\n",
+        "    test_size=0.25,\n",
+        "    random_state=42,\n",
+        "    stratify=labels\n",
+        ")\n",
+        "\n",
+        "model = SVC(kernel=\"linear\")\n",
+        "\n",
+        "model.fit(X_train, y_train)\n",
+        "\n",
+        "y_pred = model.predict(X_test)\n",
+        "\n",
+        "print(\"Accuracy:\", accuracy_score(y_test, y_pred))\n",
+        "\n",
+        "new_text = [\"This movie is wonderful\"]\n",
+        "\n",
+        "new_X = vectorizer.transform(new_text)\n",
+        "\n",
+        "prediction = model.predict(new_X)\n",
+        "\n",
+        "if prediction[0] == 1:\n",
+        "    print(\"Prediction: Positive\")\n",
+        "else:\n",
+        "    print(\"Prediction: Negative\")"
+      ]
+    }
+  ]
+}
